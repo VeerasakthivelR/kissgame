@@ -3,18 +3,24 @@
 <head>
 <meta charset="UTF-8">
 <title>Pavii ❤️ Sakthii</title>
+
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Pavii ❤️ Sakthii">
 
 <style>
 body{
-  margin:0;height:100vh;
+  margin:0;
+  height:100vh;
   background:radial-gradient(circle at top,#2a003d,#140021);
   font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display",Arial;
-  display:flex;align-items:center;justify-content:center;
+  display:flex;
+  align-items:center;
+  justify-content:center;
   color:#fff;
 }
 
-/* Layout */
 .app{width:100%;max-width:420px;padding:20px;}
 .card{
   background:rgba(0,0,0,.55);
@@ -24,21 +30,23 @@ body{
   box-shadow:0 24px 50px rgba(0,0,0,.45);
 }
 
-/* Screens */
 .screen{display:none;flex-direction:column;align-items:center;text-align:center;}
 .screen.active{display:flex}
 
-/* Typing text */
+/* Fade + Slide */
 .type{
-  width:100%;
-  max-width:320px;
+  opacity:0;
+  transform:translateY(20px);
+  transition:all .8s ease;
   font-size:18px;
   margin-bottom:18px;
-  min-height:26px;
+}
+.type.show{
+  opacity:1;
+  transform:translateY(0);
 }
 .title{font-size:26px;font-weight:600}
 
-/* Buttons */
 .btn{
   width:100%;
   max-width:320px;
@@ -50,11 +58,11 @@ body{
   color:#fff;
   font-size:17px;
   opacity:0;
+  transition:opacity .6s ease;
 }
 .btn.secondary{background:rgba(255,255,255,.12)}
 .btn.show{opacity:1}
 
-/* Input */
 input{
   width:100%;
   max-width:320px;
@@ -66,80 +74,74 @@ input{
   margin-top:12px;
 }
 
-/* Game buttons */
 .gameRow{display:flex;gap:16px;width:100%;max-width:320px}
 .gameBtn{
-  flex:1;height:120px;border-radius:22px;
-  font-size:40px;border:none;background:#ff4d6d;
+  flex:1;
+  height:120px;
+  border-radius:22px;
+  font-size:40px;
+  border:none;
+  background:#ff4d6d;
 }
 
-/* Task */
 .task{font-size:20px;margin:22px 0}
+#error{color:#ff8fa3;margin-top:10px}
 </style>
 </head>
 
 <body>
 
-<!-- 🔊 SOUNDS -->
-<audio id="sndTap" preload="auto"
-src="data:audio/mp3;base64,//uQxAA..."></audio>
-<audio id="sndType" preload="auto"
-src="data:audio/mp3;base64,//uQxAA..."></audio>
-<audio id="sndDone" preload="auto"
-src="data:audio/mp3;base64,//uQxAA..."></audio>
-<audio id="sndKiss" preload="auto"
-src="data:audio/mp3;base64,//uQxAA..."></audio>
-<audio id="sndTouch" preload="auto"
-src="data:audio/mp3;base64,//uQxAA..."></audio>
+<!-- 🎵 Romantic Music -->
+<audio id="bgMusic" loop>
+  <source src="romantic-music.mp3" type="audio/mpeg">
+</audio>
+
+<!-- 🔊 Effects -->
+<audio id="sndTap" src="data:audio/mp3;base64,//uQxAA..."></audio>
+<audio id="sndKiss" src="data:audio/mp3;base64,//uQxAA..."></audio>
+<audio id="sndTouch" src="data:audio/mp3;base64,//uQxAA..."></audio>
 
 <div class="app">
 <div class="card">
 
-<!-- WELCOME -->
 <div class="screen active" id="welcome">
-  <div class="type title" data-text="Welcome to Sakthii Game 💖"></div>
-  <div class="type" data-text="Are you Pavii?"></div>
+  <div class="type title">Welcome to Sakthii Game 💖</div>
+  <div class="type">Are you Pavii?</div>
   <button class="btn" onclick="tap();go('valentine')">YES</button>
   <button class="btn secondary" onclick="tap();go('denied')">NO</button>
 </div>
 
-<!-- DENIED -->
 <div class="screen" id="denied">
-  <div class="type title" data-text="Access Denied"></div>
-  <div class="type" data-text="Only Pavii can enter"></div>
+  <div class="type title">Access Denied</div>
+  <div class="type">Only Pavii can enter</div>
   <button class="btn" onclick="tap();go('welcome')">Back</button>
 </div>
 
-<!-- VALENTINE -->
 <div class="screen" id="valentine">
-  <div class="type title" data-text="Hey Pavii 💖"></div>
-  <div class="type" data-text="Is Sakthii near you?"></div>
+  <div class="type title">Hey Pavii 💖</div>
+  <div class="type">Is Sakthii near you?</div>
   <button class="btn" onclick="tap();go('passcode')">YES</button>
   <button class="btn secondary" onclick="tap();go('bring')">NO</button>
 </div>
 
-<!-- BRING -->
 <div class="screen" id="bring">
-  <div class="type" data-text="Please bring Sakthii with you 😊"></div>
+  <div class="type">Please bring Sakthii with you 😊</div>
   <button class="btn" onclick="tap();go('valentine')">Back</button>
 </div>
 
-<!-- PASSCODE -->
 <div class="screen" id="passcode">
-  <div class="type title" data-text="Enter Passcode"></div>
+  <div class="type title">Enter Passcode</div>
   <input id="code" placeholder="****">
   <button class="btn" onclick="tap();verify()">VERIFY</button>
   <div id="error"></div>
 </div>
 
-<!-- CONGRATS -->
 <div class="screen" id="congrats">
-  <div class="type title" data-text="Super Congratulations!!"></div>
-  <div class="type" data-text="Love touch & kiss game unlocked"></div>
+  <div class="type title">Super Congratulations!!</div>
+  <div class="type">Love touch & kiss game unlocked</div>
   <button class="btn" onclick="tap();startGame()">START GAME</button>
 </div>
 
-<!-- GAME -->
 <div class="screen" id="gameScreen">
   <div class="gameRow">
     <button class="gameBtn" onclick="tap();playKiss()">💋</button>
@@ -147,7 +149,6 @@ src="data:audio/mp3;base64,//uQxAA..."></audio>
   </div>
 </div>
 
-<!-- TASK -->
 <div class="screen" id="taskScreen">
   <div class="type task" id="taskText"></div>
   <button class="btn" onclick="tap();backToGame()">NEXT</button>
@@ -157,66 +158,65 @@ src="data:audio/mp3;base64,//uQxAA..."></audio>
 </div>
 
 <script>
-/* 🎧 SOUND HELPERS */
 let audioUnlocked=false;
+
 function unlockAudio(){
   if(audioUnlocked) return;
-  [sndTap,sndType,sndDone,sndKiss,sndTouch].forEach(a=>{
-    a.volume=.25; a.play().catch(()=>{}); a.pause(); a.currentTime=0;
+
+  bgMusic.volume=.25;
+  bgMusic.play().catch(()=>{});
+
+  [sndTap,sndKiss,sndTouch].forEach(a=>{
+    a.volume=.4;
+    a.play().catch(()=>{});
+    a.pause();
+    a.currentTime=0;
   });
+
   audioUnlocked=true;
 }
-function tap(){ unlockAudio(); sndTap.currentTime=0; sndTap.play(); }
-function playType(){ sndType.currentTime=0; sndType.play(); }
-function done(){ sndDone.currentTime=0; sndDone.play(); }
+
+function tap(){
+  unlockAudio();
+  sndTap.currentTime=0;
+  sndTap.play();
+}
+
 function playKiss(){ sndKiss.play(); pick('kiss'); }
 function playTouch(){ sndTouch.play(); pick('touch'); }
 
-/* Typing */
-const TYPE_SPEED=85;
-function typeText(el,text,cb){
-  el.textContent="";
-  let i=0;
-  const t=setInterval(()=>{
-    el.textContent+=text[i++];
-    playType();
-    if(i>=text.length){
-      clearInterval(t);
-      done();
-      cb&&setTimeout(cb,500);
-    }
-  },TYPE_SPEED);
-}
-
-function playTyping(screen){
+function animateScreen(screen){
   const texts=[...screen.querySelectorAll('.type')];
   const buttons=[...screen.querySelectorAll('.btn')];
+
+  texts.forEach(t=>t.classList.remove('show'));
   buttons.forEach(b=>b.classList.remove('show'));
-  let idx=0;
-  function next(){
-    if(idx<texts.length){
-      typeText(texts[idx],texts[idx].dataset.text||"",()=>{idx++;next();});
-    }else{
-      buttons.forEach((b,i)=>setTimeout(()=>b.classList.add('show'),i*300));
-    }
-  }
-  next();
+
+  texts.forEach((t,i)=>{
+    setTimeout(()=>t.classList.add('show'), i*500);
+  });
+
+  setTimeout(()=>{
+    buttons.forEach((b,i)=>{
+      setTimeout(()=>b.classList.add('show'), i*200);
+    });
+  }, texts.length*500);
 }
 
 function go(id){
-  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.querySelectorAll('.screen')
+    .forEach(s=>s.classList.remove('active'));
+
   const screen=document.getElementById(id);
   screen.classList.add('active');
-  playTyping(screen);
+  animateScreen(screen);
 }
 
-/* Passcode */
 function verify(){
   if(code.value==="9536") go('congrats');
   else error.textContent="Wrong passcode";
 }
 
-/* Tasks */
 const kissTasks=[
   "Kiss your partner on the forehead",
   "Kiss your partner on the cheeks",
@@ -225,6 +225,7 @@ const kissTasks=[
   "Kiss your partner on the collarbone",
   "Kiss your partner on the shoulder"
 ];
+
 const touchTasks=[
   "Touch your partner’s hand",
   "Touch your partner’s cheek",
@@ -232,17 +233,21 @@ const touchTasks=[
   "Touch your partner’s waist",
   "Touch your partner’s back"
 ];
+
 function randomFrom(a){return a[Math.floor(Math.random()*a.length)]}
 
 function startGame(){ go('gameScreen'); }
+
 function pick(type){
-  taskText.dataset.text=type==="kiss"?randomFrom(kissTasks):randomFrom(touchTasks);
+  taskText.textContent = type==="kiss"
+    ? randomFrom(kissTasks)
+    : randomFrom(touchTasks);
   go('taskScreen');
 }
+
 function backToGame(){ go('gameScreen'); }
 
-/* Init */
-playTyping(document.getElementById('welcome'));
+animateScreen(document.getElementById('welcome'));
 </script>
 
 </body>
